@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Rafael | Landing Pages de Elite</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP & Plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#020202',
+                        card: '#080808',
+                        accent: '#3b82f6',
+                        whatsapp: '#25D366',
+                    },
+                    fontFamily: {
+                        display: ['Syne', 'sans-serif'],
+                        body: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Previne lag de scroll no iOS */
+        * { -webkit-tap-highlight-color: transparent; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
+        
+        body { background-color: #020202; color: #ffffff; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; width: 100%; }
+        
+        /* GLOW AZUL CENTRALIZADO (Otimizado para Mobile) */
+        .hero-glow {
+            position: absolute;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150vw;
+            height: 50vh;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0) 70%);
+            filter: blur(60px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        
+        .text-hero { text-transform: uppercase; letter-spacing: -0.04em; line-height: 0.9; font-weight: 800; }
+        
+        .btn-glow { background: #3b82f6; box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        /* BOTÃO WHATSAPP BOLINHA PISCANTE */
+        .wa-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px 24px;
+            border-radius: 50px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+        .wa-float:active { transform: scale(0.95); }
+        .online-dot { width: 10px; height: 10px; background-color: #25d366; border-radius: 50%; position: relative; }
+        .online-dot::after { content: ''; position: absolute; width: 100%; height: 100%; background-color: #25d366; border-radius: 50%; animation: dot-pulse 1.5s infinite; }
+        @keyframes dot-pulse { 0% { transform: scale(1); opacity: 0.8; } 100% { transform: scale(2.5); opacity: 0; } }
+
+        /* FAQ INTERATIVO (UX MOBILE) */
+        .faq-answer { max-height: 0; overflow: hidden; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; }
+        .faq-item.active .faq-answer { max-height: 800px; padding-top: 1rem; opacity: 1; }
+        .faq-item.active { background: rgba(59, 130, 246, 0.05); border-color: rgba(59, 130, 246, 0.3); }
+        .faq-item.active svg { transform: rotate(180deg); color: #3b82f6; }
+
+        /* STICKY FOOTER MOBILE */
+        #mobile-cta { transform: translateY(150%); transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
+        #mobile-cta.show { transform: translateY(0); }
+        
+        .highlight { color: #3b82f6; font-weight: 700; position: relative; display: inline-block; }
+        
+        /* Ajuste fino para telas muito pequenas */
+        @media (max-width: 370px) {
+            .text-hero { font-size: 32px !important; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="hero-glow"></div>
+
+    <!-- WHATSAPP LINK -->
+    <script>const waLink = "https://wa.me/5511999999999?text=Olá%20Rafael,%20vi%20sua%20página%20e%20quero%20um%20orçamento%20para%20meu%20negócio.";</script>
+
+    <!-- WHATSAPP FLOAT (DESKTOP ONLY) -->
+    <a href="javascript:void(0)" onclick="window.open(waLink)" class="wa-float hidden md:flex">
+        <div class="online-dot"></div>
+        <span class="text-[11px] font-black uppercase tracking-widest">WhatsApp Online</span>
+        <svg width="20" height="20" fill="#25d366" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+
+    <!-- STICKY FOOTER MOBILE (Aparece após o scroll) -->
+    <div id="mobile-cta" class="fixed bottom-6 left-0 w-full z-[100] px-6 md:hidden">
+        <a href="javascript:void(0)" onclick="window.open(waLink)" class="bg-whatsapp flex items-center justify-center gap-3 w-full py-4 rounded-2xl shadow-2xl text-white font-bold text-[13px] uppercase tracking-wider">
+            QUERO MAIS CLIENTES AGORA
+        </a>
+    </div>
+
+    <!-- HEADER (Responsivo) -->
+    <header class="fixed w-full top-0 z-[60] px-4 md:px-6 py-4 md:py-6">
+        <nav class="max-w-5xl mx-auto flex justify-between items-center glass rounded-full px-6 md:px-8 py-3">
+            <div class="text-base md:text-xl font-display font-bold tracking-tighter uppercase">RAFAEL<span class="text-accent">.</span>LP</div>
+            <div class="hidden md:flex gap-8 text-[10px] uppercase tracking-widest font-bold opacity-70">
+                <a href="#inicio" class="hover:text-accent transition">Início</a>
+                <a href="#sobre" class="hover:text-accent transition">Rafael</a>
+                <a href="#planos" class="hover:text-accent transition">Planos</a>
+            </div>
+            <a href="javascript:void(0)" onclick="window.open(waLink)" class="bg-white text-black px-4 md:px-5 py-2 rounded-full text-[9px] md:text-[11px] font-black uppercase hover:bg-accent hover:text-white transition-all">
+                Orçamento
+            </a>
+        </nav>
+    </header>
+
+    <!-- HERO SECTION (Otimizado Mobile) -->
+    <section id="inicio" class="relative min-h-[90vh] flex items-center justify-center pt-24 pb-10 overflow-hidden px-6 text-center">
+        <div class="container mx-auto relative z-10">
+            <div class="hero-reveal inline-block px-4 py-1 rounded-full border border-white/10 glass text-[8px] md:text-[10px] font-bold tracking-[0.2em] text-accent mb-8 uppercase italic">
+                CONVERSÃO MÁXIMA PARA NEGÓCIOS LOCAIS
+            </div>
+            <h1 class="hero-reveal text-hero text-[38px] sm:text-[60px] md:text-[110px] font-display mb-10">
+                PÁGINAS QUE <br><span class="opacity-40">VENDEM POR</span> <br>VOCÊ.
+            </h1>
+            <div class="hero-reveal">
+                <a href="javascript:void(0)" onclick="window.open(waLink)" class="btn-glow inline-block text-white px-8 md:px-14 py-5 md:py-6 rounded-2xl font-black text-sm md:text-xl uppercase tracking-tight">
+                    QUERO MAIS CLIENTES
+                </a>
+                <p class="mt-4 text-[9px] md:text-[10px] text-gray-500 uppercase tracking-widest font-bold italic">Primeira prévia em 48h. Sem complicação.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- BIOGRAFIA (Visual Mobile-First) -->
+    <section id="sobre" class="py-10 md:py-20 px-6 max-w-5xl mx-auto">
+        <div class="reveal glass p-8 md:p-16 rounded-[3rem] border-white/5">
+            <div class="text-white text-lg md:text-3xl leading-[1.5] space-y-8 italic font-light">
+                <p>Meu nome é <span class="highlight">Rafael</span>, e trabalho criando <span class="highlight">páginas estratégicas</span> focadas em <span class="highlight">trazer mais clientes</span> para negócios locais.</p>
+                
+                <p>Meu objetivo não é apenas criar sites bonitos, mas desenvolver páginas simples, diretas e eficientes, que fazem o visitante <span class="highlight">entrar em contato, principalmente pelo WhatsApp</span>.</p>
+                
+                <p>Acredito que hoje, ter uma presença online não é mais opção — <span class="highlight">é o que diferencia quem cresce de quem fica parado</span>.</p>
+                
+                <p>Ajudo academias, lojas e prestadores de serviço a terem uma <span class="highlight">presença profissional na internet, de forma rápida, acessível e sem complicação</span>.</p>
+                
+                <p class="text-xl md:text-4xl font-display font-bold not-italic mt-12 leading-tight uppercase">Se você quer <span class="text-accent italic underline">mais clientes</span> e um site que <span class="text-accent italic underline">realmente funcione</span>, posso te ajudar.</p>
+            </div>
+            <div class="mt-12">
+                <a href="javascript:void(0)" onclick="window.open(waLink)" class="text-accent font-black uppercase text-[11px] md:text-[14px] tracking-[0.3em] border-b-2 border-accent pb-2">TIRA MINHA DÚVIDA NO ZAP AGORA</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROCESSO (4 PASSOS VERTICAIS NO MOBILE) -->
+    <section id="processo" class="py-20 md:py-32 px-6 bg-white/[0.01]">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="reveal text-3xl md:text-6xl font-display font-bold uppercase italic leading-tight">Site no ar em <span class="text-accent">5 dias</span></h2>
+                <p class="reveal text-gray-500 mt-4 uppercase text-[9px] font-bold tracking-widest italic">Sem enrolação. Sem agendar call.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="reveal glass p-6 md:p-8 rounded-[2rem] border-white/5 border-l-4 border-l-accent md:border-l-0">
+                    <span class="text-accent text-xs font-black italic block mb-2 tracking-widest uppercase">Passo 1</span>
+                    <h3 class="text-white font-bold text-[13px] uppercase mb-2">Me chama no Zap</h3>
+                    <p class="text-gray-400 text-xs leading-relaxed italic">Escolha o plano e caia no WhatsApp. Respondo a partir das 18h com o checklist.</p>
+                </div>
+                <div class="reveal glass p-6 md:p-8 rounded-[2rem] border-white/5 border-l-4 border-l-accent md:border-l-0">
+                    <span class="text-accent text-xs font-black italic block mb-2 tracking-widest uppercase">Passo 2</span>
+                    <h3 class="text-white font-bold text-[13px] uppercase mb-2">Manda o Básico</h3>
+                    <p class="text-gray-400 text-xs leading-relaxed italic">Logo, foto e textos. Não tem logo? Eu crio. Não tem foto? Uso premium temporária.</p>
+                </div>
+                <div class="reveal glass p-6 md:p-8 rounded-[2rem] border-white/5 border-l-4 border-l-accent md:border-l-0">
+                    <span class="text-accent text-xs font-black italic block mb-2 tracking-widest uppercase">Passo 3</span>
+                    <h3 class="text-white font-bold text-[13px] uppercase mb-2">Prévia em 48h</h3>
+                    <p class="text-gray-400 text-xs leading-relaxed italic">Link secreto para abrir no celular. Ajusto na hora até ficar perfeito.</p>
+                </div>
+                <div class="reveal glass p-6 md:p-8 rounded-[2rem] border-white/5 border-l-4 border-l-accent md:border-l-0">
+                    <span class="text-accent text-xs font-black italic block mb-2 tracking-widest uppercase">Passo 4</span>
+                    <h3 class="text-white font-bold text-[13px] uppercase mb-2">Site Oficial</h3>
+                    <p class="text-gray-400 text-xs leading-relaxed italic">Aprovou? Colocamos no ar. Registro seu domínio e te entrego tudo rodando.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PLANOS (TABELA CLÁSSICA ACUMULATIVA MOBILE) -->
+    <section id="planos" class="py-20 md:py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="reveal text-4xl md:text-6xl font-display font-bold uppercase italic text-center mb-16 italic">Escolha seu <span class="text-accent">Plano</span></h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- START -->
+                <div class="reveal plan-card glass p-8 md:p-12 rounded-[3.5rem] border-white/10 flex flex-col">
+                    <span class="text-accent font-bold text-[10px] uppercase mb-2 italic tracking-widest">Opção START</span>
+                    <h3 class="text-2xl font-display font-bold uppercase mb-2 italic leading-tight">R$ 497 + R$ 197/mês</h3>
+                    <ul class="text-[12px] space-y-4 text-gray-400 my-8 flex-1 italic">
+                        <li class="flex items-center gap-2 italic">✔ Site 1 página profissional</li>
+                        <li class="flex items-center gap-2 italic">✔ Botão Zap + Google 5.0★</li>
+                        <li class="flex items-center gap-2 italic">✔ Até 5 alterações p/ mês</li>
+                        <li class="flex items-center gap-2 italic">✔ 4 redesigns sazonais p/ ano</li>
+                    </ul>
+                    <a href="javascript:void(0)" onclick="window.open(waLink)" class="bg-accent text-white text-center py-5 rounded-2xl font-black uppercase text-[11px] tracking-widest active:scale-95 transition-all">QUERO MAIS CLIENTES</a>
+                </div>
+                <!-- PRO (MAIS VENDIDO) -->
+                <div class="reveal plan-card glass p-8 md:p-12 rounded-[3.5rem] border-accent/40 flex flex-col bg-accent/[0.04] relative scale-100 md:scale-110 z-10">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-accent text-white px-6 py-1 rounded-full text-[9px] font-bold uppercase tracking-[0.2em] italic">Destaque</div>
+                    <span class="text-accent font-bold text-[10px] uppercase mb-2 italic tracking-widest">Opção PRO</span>
+                    <h3 class="text-2xl font-display font-bold uppercase mb-2 italic leading-tight">R$ 997 + R$ 297/mês</h3>
+                    <ul class="text-[12px] space-y-4 text-gray-400 my-8 flex-1 italic font-medium">
+                        <li class="text-white italic">✔ Tudo do Ativo +</li>
+                        <li class="text-white italic">✔ Site 3 páginas premium</li>
+                        <li class="text-white italic">✔ Integração Agenda Online</li>
+                        <li class="italic font-bold">✔ Pop-up "Últimas Vagas"</li>
+                    </ul>
+                    <a href="javascript:void(0)" onclick="window.open(waLink)" class="btn-glow text-white text-center py-5 rounded-2xl font-black uppercase text-[11px] tracking-widest active:scale-95 transition-all">QUERO AGENDA CHEIA</a>
+                </div>
+                <!-- VITALÍCIO -->
+                <div class="reveal plan-card glass p-8 md:p-12 rounded-[3.5rem] border-white/10 flex flex-col">
+                    <span class="text-accent font-bold text-[10px] uppercase mb-2 italic tracking-widest">Opção VITALÍCIO</span>
+                    <h3 class="text-2xl font-display font-bold uppercase mb-2 italic leading-tight">R$ 1.200 à vista</h3>
+                    <ul class="text-[12px] space-y-4 text-gray-400 my-8 flex-1 italic">
+                        <li class="flex items-center gap-2 italic font-bold text-accent">✔ SEM MENSALIDADES</li>
+                        <li class="flex items-center gap-2 italic">✔ Site 1 página + Domínio</li>
+                        <li class="flex items-center gap-2 italic">✔ 3 rodadas de ajustes em 7 dias</li>
+                        <li class="flex items-center gap-2 italic">✔ Vídeo Tutorial p/ Edição</li>
+                    </ul>
+                    <a href="javascript:void(0)" onclick="window.open(waLink)" class="border border-white/10 text-white text-center py-5 rounded-2xl font-black uppercase text-[11px] tracking-widest active:scale-95 transition-all">QUERO SER DONO DO SITE</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ COMPLETO (12 PERGUNTAS) -->
+    <section id="faq" class="py-20 md:py-32 px-6 bg-white/[0.01]">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="reveal text-4xl font-display font-bold mb-12 text-center italic uppercase italic tracking-tighter">Perguntas <span class="text-accent">Frequentes</span></h2>
+            <div class="space-y-3">
+                <!-- FAQ 1-12 -->
+                <div class="reveal faq-item glass rounded-2xl p-5 md:p-8 cursor-pointer border border-white/5 text-left">
+                    <div class="flex justify-between items-center gap-4">
+                        <h3 class="font-bold text-[13px] md:text-base uppercase tracking-tight italic leading-tight">1. O site é meu mesmo se eu cancelar?</h3>
+                        <svg class="transition duration-500 text-accent flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="faq-answer text-gray-400 text-[13px] md:text-sm leading-relaxed italic">Sim, 100%. O domínio fica no seu CPF/CNPJ. Se cancelar o plano mensal, você só assume a hospedagem mínima direto com a empresa (R$ 15/mês). Nada some, nada trava. Continua no ar.</div>
+                </div>
+
+                <div class="reveal faq-item glass rounded-2xl p-5 md:p-8 cursor-pointer border border-white/5 text-left">
+                    <div class="flex justify-between items-center gap-4">
+                        <h3 class="font-bold text-[13px] md:text-base uppercase tracking-tight italic leading-tight">2. Em quanto tempo meu site fica pronto?</h3>
+                        <svg class="transition duration-500 text-accent flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="faq-answer text-gray-400 text-[13px] md:text-sm leading-relaxed italic">Te entrego a 1ª versão pra aprovar em 48h após o envio dos materiais básicos. Site no ar oficial em até 5 dias úteis. Rapidez total.</div>
+                </div>
+
+                <div class="reveal faq-item glass rounded-2xl p-5 md:p-8 cursor-pointer border border-white/5 text-left">
+                    <div class="flex justify-between items-center gap-4">
+                        <h3 class="font-bold text-[13px] md:text-base uppercase tracking-tight italic leading-tight">3. E se eu não tiver fotos profissionais?</h3>
+                        <svg class="transition duration-500 text-accent flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="faq-answer text-gray-400 text-[13px] md:text-sm leading-relaxed italic">Normal. Subo com imagens premium de bancos internacionais. Quando você fizer suas fotos, troco sem custo na alteração mensal.</div>
+                </div>
+
+                <div class="reveal faq-item glass rounded-2xl p-5 md:p-8 cursor-pointer border border-white/5 text-left">
+                    <div class="flex justify-between items-center gap-4">
+                        <h3 class="font-bold text-[13px] md:text-base uppercase tracking-tight italic leading-tight">4. Como funciona o suporte se é só de noite?</h3>
+                        <svg class="transition duration-500 text-accent flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="faq-answer text-gray-400 text-[13px] md:text-sm leading-relaxed italic">Atendo das 18h às 00h para manter o custo baixo. Pedidos enviados até 16h entram na fila e entrego até 22h do mesmo dia. Ágil e direto.</div>
+                </div>
+
+                <div class="reveal faq-item glass rounded-2xl p-5 md:p-8 cursor-pointer border border-white/5 text-left">
+                    <div class="flex justify-between items-center gap-4">
+                        <h3 class="font-bold text-[13px] md:text-base uppercase tracking-tight italic leading-tight">5. O que são os "redesigns sazonais"?</h3>
+                        <svg class="transition duration-500 text-accent flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="faq-answer text-gray-400 text-[13px] md:text-sm leading-relaxed italic">É seu site com cara de Natal, Dia das Mães, Black Friday. Troco o banner principal e botões para você vender o ano todo sem parecer abandonado.</div>
+                </div>
+
+                <div class="reveal faq-item glass rounded-2xl p-5 md:p-8 cursor-pointer border border-white/5 text-left">
+                    <div class="flex justify-between items-center gap-4">
+                        <h3 class="font-bold text-[13px] md:text-base uppercase tracking-tight italic leading-tight">6. Quantas alterações posso pedir?</h3>
+                        <svg class="transition duration-500 text-accent flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="faq-answer text-gray-400 text-[13px] md:text-sm leading-relaxed italic">Nos planos mensais: até 5 por mês. Vale para trocar foto, texto, preço ou promoção. Dia 1º o contador zera. No vitalício são 3 rodadas de ajustes grátis iniciais.</div>
+                </div>
+
+                <div class="reveal faq-item glass rounded-2xl p-5 md:p-8 cursor-pointer border border-white/5 text-left">
+                    <div class="flex justify-between items-center gap-4">
+                        <h3 class="font-bold text-[13px] md:text-base uppercase tracking-tight italic leading-tight">7. Qual a diferença do Vitalício?</h3>
+                        <svg class="transition duration-500 text-accent flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="faq-answer text-gray-400 text-[13px] md:text-sm leading-relaxed italic">Vitalício paga 1x e some com mensalidade. Suporte 30 dias. Mensais têm suporte técnico, hospedagem inclusa e alterações todo mês.</div>
+                </div>
+
+                <div class="reveal faq-item glass rounded-2xl p-5 md:p-8 cursor-pointer border border-white/5 text-left">
+                    <div class="flex justify-between items-center gap-4">
+                        <h3 class="font-bold text-[13px] md:text-base uppercase tracking-tight italic leading-tight">8. E se eu não gostar do site?</h3>
+                        <svg class="transition duration-500 text-accent flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="faq-answer text-gray-400 text-[13px] md:text-sm leading-relaxed italic">Você tem rodadas de ajustes ilimitadas nos primeiros 7 dias até falar "tá perfeito". Meu objetivo é sua satisfação total.</div>
+                </div>
+
+                <div class="reveal faq-item glass rounded-2xl p-5 md:p-8 cursor-pointer border border-white/5 text-left">
+                    <div class="flex justify-between items-center gap-4">
+                        <h3 class="font-bold text-[13px] md:text-base uppercase tracking-tight italic leading-tight">9. Preciso entender de PC para mexer?</h3>
+                        <svg class="transition duration-500 text-accent flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="faq-answer text-gray-400 text-[13px] md:text-sm leading-relaxed italic">Não. Te entrego um vídeo curto mostrando como trocar textos sozinho. Mais fácil que postar no Instagram.</div>
+                </div>
+
+                <div class="reveal faq-item glass rounded-2xl p-5 md:p-8 cursor-pointer border border-white/5 text-left">
+                    <div class="flex justify-between items-center gap-4">
+                        <h3 class="font-bold text-[13px] md:text-base uppercase tracking-tight italic leading-tight">10. Tem contrato ou fidelidade?</h3>
+                        <svg class="transition duration-500 text-accent flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="faq-answer text-gray-400 text-[13px] md:text-sm leading-relaxed italic">Zero fidelidade. Cancela o mensal quando quiser sem multa. Transparência total para sua segurança.</div>
+                </div>
+
+                <div class="reveal faq-item glass rounded-2xl p-5 md:p-8 cursor-pointer border border-white/5 text-left">
+                    <div class="flex justify-between items-center gap-4">
+                        <h3 class="font-bold text-[13px] md:text-base uppercase tracking-tight italic leading-tight">11. Como funciona o pagamento?</h3>
+                        <svg class="transition duration-500 text-accent flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="faq-answer text-gray-400 text-[13px] md:text-sm leading-relaxed italic">Pagamento 100% via Pix. Ativação no início e mensalidade todo dia 10. Sem burocracia, rápido e prático.</div>
+                </div>
+
+                <div class="reveal faq-item glass rounded-2xl p-5 md:p-8 cursor-pointer border border-white/5 text-left">
+                    <div class="flex justify-between items-center gap-4">
+                        <h3 class="font-bold text-[13px] md:text-base uppercase tracking-tight italic leading-tight">12. Por que só 3 clientes por mês?</h3>
+                        <svg class="transition duration-500 text-accent flex-shrink-0" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                    </div>
+                    <div class="faq-answer text-gray-400 text-[13px] md:text-sm leading-relaxed italic">Para garantir que sua Landing Page receba atenção máxima aos detalhes e o suporte seja sempre ágil. Esse mês ainda tenho 2 vagas.</div>
+                </div>
+            </div>
+            <!-- CTA FINAL -->
+            <div class="reveal mt-16 text-center">
+                <a href="javascript:void(0)" onclick="window.open(waLink)" class="btn-glow text-white px-10 py-5 rounded-2xl font-black text-lg md:text-xl uppercase tracking-tighter active:scale-95 transition-all">CHAMA NO WHATSAPP AGORA</a>
+                <p class="mt-4 text-[9px] text-gray-500 uppercase tracking-widest font-bold italic italic leading-tight">Sem compromisso. Só pra te explicar melhor.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-12 border-t border-white/5 text-center px-6">
+        <p class="opacity-30 text-[8px] md:text-[9px] tracking-[0.4em] uppercase font-bold italic">© 2026 RAFAEL LP - DESIGN DE ALTA PERFORMANCE</p>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        window.addEventListener('load', () => {
+            // Animação Hero
+            gsap.from(".hero-reveal", { y: 40, opacity: 0, duration: 1, stagger: 0.1, ease: "power3.out" });
+            
+            // Revelar Seções no Scroll
+            document.querySelectorAll('.reveal').forEach((el) => {
+                gsap.from(el, {
+                    scrollTrigger: { trigger: el, start: "top 95%" },
+                    y: 30, opacity: 0, duration: 1, ease: "power2.out"
+                });
+            });
+
+            // Lógica do Mobile Sticky CTA (Aparece após 400px de scroll)
+            ScrollTrigger.create({
+                start: "top -400",
+                onUpdate: (self) => {
+                    const cta = document.getElementById('mobile-cta');
+                    if (self.direction === -1) { // Scroll Up
+                        cta.classList.add('show');
+                    } else { // Scroll Down
+                        cta.classList.remove('show');
+                    }
+                }
+            });
+        });
+
+        // FAQ Toggle Logic
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                if (!isActive) item.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
